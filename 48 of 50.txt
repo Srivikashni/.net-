@@ -1,0 +1,37 @@
+BUILD A PRIORITY QUEUE USING A HEAP
+using System;
+using System.Collections.Generic;
+class PriorityQueue<T> where T : IComparable<T>
+{
+    private List<T> heap = new();
+    public void Enqueue(T item)
+    {
+        for (heap.Add(item), int i = heap.Count - 1; i > 0 && heap[i].CompareTo(heap[(i - 1) / 2]) < 0; i = (i - 1) / 2)
+            (heap[i], heap[(i - 1) / 2]) = (heap[(i - 1) / 2], heap[i]);
+    }
+    public T Dequeue()
+    {
+        if (heap.Count == 0) throw new InvalidOperationException("Queue is empty.");
+        T root = heap[0]; heap[0] = heap[^1]; heap.RemoveAt(heap.Count - 1);
+        for (int i = 0, left, right, smallest; (left = 2 * i + 1) < heap.Count; i = smallest)
+        {
+            right = left + 1;
+            smallest = (right < heap.Count && heap[right].CompareTo(heap[left]) < 0) ? right : left;
+            if (heap[i].CompareTo(heap[smallest]) <= 0) break;
+            (heap[i], heap[smallest]) = (heap[smallest], heap[i]);
+        }
+        return root;
+    }
+}
+
+class Program
+{
+    static void Main()
+    {
+        var pq = new PriorityQueue<int>();
+        pq.Enqueue(5); pq.Enqueue(2); pq.Enqueue(8);
+        Console.WriteLine(pq.Dequeue());
+        Console.WriteLine(pq.Dequeue());
+        Console.WriteLine(pq.Dequeue());
+    }
+}

@@ -1,0 +1,26 @@
+IMPLEMENT A SIMPLE DRAWING APPLICATION
+using System;
+using System.Drawing;
+using System.Windows.Forms;
+class DrawingApp : Form
+{
+    private bool isDrawing;
+    private Point lastPoint;
+    public DrawingApp()
+    {
+        Text = "Drawing App";
+        MouseDown += (s, e) => { isDrawing = true; lastPoint = e.Location; };
+        MouseMove += (s, e) =>
+        {
+            if (isDrawing && e.Button == MouseButtons.Left)
+            {
+                using var g = CreateGraphics();
+                g.DrawLine(Pens.Black, lastPoint, e.Location);
+                lastPoint = e.Location;
+            }
+        };
+        MouseUp += (s, e) => isDrawing = false;
+    }
+    [STAThread]
+    static void Main() => Application.Run(new DrawingApp());
+}

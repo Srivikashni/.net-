@@ -1,0 +1,28 @@
+ENCRYPT AND DECRYPT A FILE
+using System;
+using System.IO;
+using System.Security.Cryptography;
+class FileEncryptor
+{
+    static void Main()
+    {
+        Console.Write("Enter file path to encrypt: ");
+        string filePath = Console.ReadLine();
+        Console.Write("Enter encryption password: ");
+        string password = Console.ReadLine();
+        EncryptFile(filePath, filePath + ".enc", password);
+        Console.WriteLine($"File encrypted to {filePath}.enc");
+    }
+    static void EncryptFile(string inputFile, string outputFile, string password)
+    {
+        byte[] key = new Rfc2898DeriveBytes(password, new byte[8]).GetBytes(32);
+        using var aes = Aes.Create();
+        using var fsCrypt = new FileStream(outputFile, FileMode.Create);
+        aes.Key = key;
+        aes.GenerateIV();
+        fsCrypt.Write(aes.IV, 0, aes.IV.Length);
+        using var cs = new CryptoStream(fsCrypt, aes.CreateEncryptor(), CryptoStreamMode.Write);
+        using var fsIn = new FileStream(inputFile, FileMode.Open);
+        fsIn.CopyTo(cs);
+    }
+}

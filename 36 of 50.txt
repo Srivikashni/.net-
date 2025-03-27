@@ -1,0 +1,25 @@
+CREATE A SIMPLE LOGIN FORM
+using System;
+using System.Windows.Forms;
+class LoginForm : Form
+{
+    public LoginForm()
+    {
+        Text = "Login Form";
+        var usernameLabel = new Label { Text = "Username:", Top = 20, Left = 20 };
+        var usernameTextBox = new TextBox { Top = 20, Left = 100, Width = 200 };
+        var passwordLabel = new Label { Text = "Password:", Top = 60, Left = 20 };
+        var passwordTextBox = new TextBox { Top = 60, Left = 100, Width = 200, PasswordChar = '*' };
+        var messageLabel = new Label { Top = 140, Left = 20, Width = 300 };
+        var loginButton = new Button { Text = "Login", Top = 100, Left = 100 };
+        loginButton.Click += (s, e) =>
+        {
+            messageLabel.Text = usernameTextBox.Text == "admin" && passwordTextBox.Text == "password" 
+                ? "Login successful!" 
+                : "Invalid credentials.";
+        };
+        Controls.AddRange(new Control[] { usernameLabel, usernameTextBox, passwordLabel, passwordTextBox, loginButton, messageLabel });
+    }
+    [STAThread]
+    static void Main() => Application.Run(new LoginForm());
+}
